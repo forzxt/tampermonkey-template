@@ -1,89 +1,130 @@
 const app = () => {
-  let rid = new URLSearchParams(window.location.search).get('rid');
-  if (!rid) {
-    const results = window.location.pathname.match(/[\d]{1,10}/);
-    if (results) {
-      rid = results[0];
-    } else {
+  function dragBtn() {
+    const bika_download_element = document.querySelector('#bika_download') as any;
+    if (!bika_download_element) {
       return;
     }
-  }
-  const videoSub = document.querySelector('.layout-Player-videoSub');
+    bika_download_element.addEventListener('mousedown', function (event: any) {
+      bika_download_element.style.transition = 'null';
+      const disX = event.clientX - bika_download_element.offsetLeft;
+      const disY = event.clientY - bika_download_element.offsetTop;
 
-  if (rid && videoSub) {
-    autoSelectClarity(rid, videoSub);
-  }
-};
+      const move = function (event: any) {
+        bika_download_element.style.left = event.clientX - disX + 'px';
+        bika_download_element.style.top = event.clientY - disY + 'px';
+      };
 
-const autoSelectClarity = (rid: string, videoSub: Element) => {
-  const Clarities = ['全局默认最高画质', '全局默认最低画质'];
-  const selectedClarity: string | null = GM_getValue(rid);
-  const defaultClarity: number | null = GM_getValue('defaultClarity');
+      document.addEventListener('mousemove', move);
+      document.addEventListener('mouseup', function () {
+        document.removeEventListener('mousemove', move);
 
-  const clickClarity = (li: HTMLLIElement, save = false) => {
-    if (!li.className.includes('selected')) {
-      save ? GM_setValue(rid, li.innerText) : null;
-      li.click();
-    }
-  };
-
-  const selectClarity = (list: NodeListOf<HTMLLIElement>) => {
-    // 注册菜单栏
-    Clarities.forEach((clarity, index) => {
-      GM_registerMenuCommand(clarity, () => {
-        if (index === 0) {
-          clickClarity(list[0]);
-          GM_setValue('defaultClarity', 1);
+        if (parseInt(bika_download_element.style.left) < 0) {
+          bika_download_element.style.right = 'auto';
+          bika_download_element.style.left = '-190px';
+          bika_download_element.style.opacity = '0.1';
+        } else if (parseInt(bika_download_element.style.left) + 200 > window.innerWidth) {
+          bika_download_element.style.left = 'auto';
+          bika_download_element.style.right = '-190px';
+          bika_download_element.style.opacity = '0.1';
         } else {
-          clickClarity(list[list.length - 1]);
-          GM_setValue('defaultClarity', 0);
+          bika_download_element.style.opacity = '0.8';
         }
-        if (selectedClarity) {
-          GM_setValue(rid, null);
-        }
+
+        bika_download_element.positionTop = bika_download_element.offsetTop;
+        GM_setValue('bika_download_element', bika_download_element);
       });
     });
 
-    let notFoundCount = 0;
-    list.forEach((li) => {
-      const availableClarity = li.innerText;
-      if (selectedClarity === availableClarity) {
-        // 选择自定义画质
-        clickClarity(li);
-      } else {
-        notFoundCount++;
+    bika_download_element.addEventListener('mouseenter', function (event: any) {
+      const { offsetX, clientX } = event;
+      if (offsetX >= 190 && clientX <= 10) {
+        bika_download_element.style.transition = 'all 0.3s';
+        bika_download_element.style.left = '0px';
+        bika_download_element.style.right = 'auto';
+        bika_download_element.style.opacity = '0.8';
       }
-      // 防止误触发保存，仅保存真实点击
-      li.addEventListener('click', (e) => clickClarity(li, e.isTrusted));
-      // 注册菜单栏
-      GM_registerMenuCommand(availableClarity, () => clickClarity(li, true));
+      if (offsetX <= 10 && clientX >= window.innerWidth - 10) {
+        bika_download_element.style.transition = 'all 0.3s';
+        bika_download_element.style.left = 'auto';
+        bika_download_element.style.right = '0';
+        bika_download_element.style.opacity = '0.8';
+      }
+      bika_download_element.addEventListener('mouseleave', function (event: any) {
+        if (bika_download_element.offsetLeft <= 0) {
+          console.log('左侧收缩');
+          bika_download_element.style.left = '-190px';
+          bika_download_element.style.right = 'auto';
+          bika_download_element.style.opacity = '0.1';
+        }
+        if (bika_download_element.offsetLeft >= window.innerWidth - 200) {
+          console.log('右侧收缩');
+          bika_download_element.style.left = 'auto';
+          bika_download_element.style.right = '-190px';
+          bika_download_element.style.opacity = '0.1';
+        }
+      });
     });
+  }
+  // 创建用户界面
+  function createUI() {
+    const bika_download = document.createElement('div');
 
-    // 选择默认画质
-    if (notFoundCount === list.length) {
-      if (defaultClarity === 0) {
-        clickClarity(list[list.length - 1]);
-      } else {
-        clickClarity(list[0]);
-      }
-    }
-  };
+    bika_download.id = 'bika_download';
+    bika_download.innerHTML = `${bika_download.innerHTML}<style>
+#bika_download {
+    width :200px;
+    height :350px;
+    position :fixed;
+    left :-190px;
+    top :150px;
+    background :rgba(0,0,0,0.5);
+    opacity :0.1;
+    cursor :move;
+    overflow :auto;
+    color :#fff;
+    fontSize :14px;
+}
+#bika_download_list{
+    padding: 0 4px;
+}
+#bika_download_list::-webkit-scrollbar {
+     width: 4px;
+     height: 4px;
+ }
+ /* 滚动条滑块（里面小方块） */
+ #bika_download_list::-webkit-scrollbar-thumb {
+     border-radius: 12px;
+     box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+     background: rgba(0,0,0,0.9);
+ }
+ /* 滚动条轨道 */
+ #bika_download_list::-webkit-scrollbar-track {
+     border-radius: 0;
+     box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+     background: rgba(0,0,0,0.2);
+ }
+ #bika_download_actions_bar {
+     width: 100%;
+    height: 60px;
+    background: rgba(0,0,0,.3);
+ }
+</style>`;
 
-  const callback = (mutations: MutationRecord[], observer: MutationObserver) => {
-    const controller = videoSub?.querySelector(`[value="画质 "]`);
-    if (controller) {
-      observer.disconnect();
-      const ul = controller.nextElementSibling;
-      const list = ul?.querySelectorAll('li');
-      list ? selectClarity(list) : console.debug('斗鱼直播助手：未找到画质选项');
-    }
-  };
+    const bika_download_actions_bar = document.createElement('div');
+    bika_download_actions_bar.id = 'bika_download_actions_bar';
+    const bika_download_list = document.createElement('div');
+    bika_download_list.id = 'bika_download_list';
 
-  const observer = new MutationObserver(callback);
+    bika_download.appendChild(bika_download_actions_bar);
+    bika_download.appendChild(bika_download_list);
+    document.body.appendChild(bika_download);
 
-  observer.observe(videoSub, {
-    childList: true,
-    subtree: true,
-  });
+    dragBtn();
+  }
+
+  function main(): void {
+    createUI();
+  }
+  main();
 };
 export default app;

@@ -7,7 +7,7 @@ const year = new Date().getFullYear();
 const getBanner = (meta) => `// ==UserScript==\n${Object.entries(Object.assign(commonMeta, meta))
   .map(([key, value]) => {
     if (Array.isArray(value)) {
-      return value.map((item) => `// @${key.padEnd(20, ' ')}${item}`).join('\n');
+      return value.map((item) => `// @${item ? key.padEnd(20, ' ') : key}${item}`).join('\n');
     }
     return `// @${key.padEnd(20, ' ')}${value.replace(/\[year\]/g, year)}`;
   })

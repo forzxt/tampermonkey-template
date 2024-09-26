@@ -4,10 +4,10 @@
   "description": "以斗鱼直播自动切换清晰度作为示例的油猴脚本开发模板",
   "main": "/dist/douyu.user.js",
   "scripts": {
-    "start": "webpack serve --config ./config/webpack.dev.js --env filename=douyu.dev.user.js",
-    "dev": "webpack --watch --config ./config/webpack.dev.js --env filename=douyu.dev.user.js",
-    "build": "npm run lint:fix && webpack --config ./config/webpack.prod.js --env filename=douyu.user.js",
-    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "start": "webpack serve --config ./config/webpack.dev.js --env filename=bika_download.dev.user.js",
+    "dev": "webpack --watch --config ./config/webpack.dev.js --env filename=bika_download.dev.user.js",
+    "build": " webpack --config ./config/webpack.prod.js --env filename=bika_download.user.js",
+    "lint": "eslint /src/**/*.{ts,tsx}",
     "lint:fix": "npm run lint --fix"
   },
   "repository": {
@@ -15,16 +15,12 @@
     "url": "https://github.com/Eished/tampermonkey-template.git"
   },
   "keywords": [
-    "douyu",
+    "bika",
     "TamperMonkey",
     "typescript"
   ],
-  "author": "Eished",
+  "author": "forcier",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Eished/tampermonkey-template/issues"
-  },
-  "homepage": "https://github.com/Eished/tampermonkey-template",
   "devDependencies": {
     "@babel/core": "^7.17.9",
     "@babel/preset-env": "^7.16.11",
@@ -33,7 +29,6 @@
     "@typescript-eslint/parser": "^5.19.0",
     "babel-loader": "^8.2.4",
     "css-loader": "^6.7.3",
-    "eslint": "^8.13.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-html": "^6.2.0",
     "eslint-plugin-prettier": "^4.0.0",
@@ -48,5 +43,7 @@
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.9.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "eslint": "^8.32.0"
+  }
 }

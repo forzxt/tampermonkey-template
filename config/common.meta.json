@@ -1,15 +1,14 @@
 {
-  "name": "斗鱼直播助手",
-  "namespace": "https://github.com/Eished/douyu-helper",
-  "version": "2022.08.22",
-  "description": "斗鱼直播自动切换画质，全局设置最高画质或最低画质，可单独设置每个直播间画质：原画、4K、2K、1080p、蓝光、720p、超清、高清清晰度，自动记忆并切换到上次选择的画质。油猴开发模板，Tampermonkey template",
-  "author": "Eished",
-  "copyright": "Eished",
-  "license": "MIT",
-  "match": ["*://*.douyu.com/*"],
+  "name": "哔咔漫画一键下载",
+  "namespace": "https://github.com/forzxt",
+  "version": "1.0.0",
+  "description": "推荐打开梯子下载，不然下载很慢，还容易出错少图。 1.分集选择页面按d下载所有分集。2.阅读时按d下载当前分集。3.漫画详情页面打开新标签页。4.读不到登录信息时跳转到登录页面。5.修复选集页面看不到推荐漫画。6.屏蔽部分广告。",
+  "author": "forcier",
+  "copyright": "forcier",
+  "license": "GPL",
+  "match": ["*://manhuabika.com/*", "*://manhuapica.com*"],
   "run-at": "document-idle",
-  "supportURL": "https://github.com/Eished/douyu-helper/issues",
-  "homepage": "https://github.com/Eished/douyu-helper",
-  "grant": ["GM_getValue", "GM_setValue", "GM_registerMenuCommand"],
-  "icon": "https://www.google.com/s2/favicons?domain=douyu.com"
+  "grant": ["GM_getValue", "GM_setValue", "GM_registerMenuCommand", "unsafeWindow", "GM_xmlhttpRequest"],
+  "icon": "data:image/png;base64,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",
+  "noframes": ""
 }

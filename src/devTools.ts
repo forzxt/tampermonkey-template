@@ -34,6 +34,7 @@ export const hotReload = () => {
  * 首次运行时自动安装
  */
 export const autoInstall = () => {
+  console.log('FILENAME', FILENAME);
   const isInstalled = localStorage.getItem(FILENAME);
   if (!isInstalled) {
     window.open(FILENAME, 'self');
